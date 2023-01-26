@@ -1,15 +1,47 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_project_screens/screens/recordingScreen.dart';
+import 'package:flutter_project_screens/globalVars.dart';
+import 'package:flutter_project_screens/screens/khubaib/recordingScreen.dart';
+import 'package:flutter_project_screens/screens/zetro/AdminSetting.dart';
 import 'package:google_fonts/google_fonts.dart';
-class Home extends StatelessWidget {
+import 'package:http/http.dart' as http;
+class Home extends StatefulWidget {
+
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+Future<bool> sendData() async {
+  var respose=await http.post(
+    Uri.parse('http://192.168.91.52:8009/postRoomData?class=${cls.text}&section=${section.text}&subject=${subject.text}&teacher=${teacher.text}'),
+  );
+  
+   GlobalVars.lectureID =respose.body;
+  if(respose.statusCode==200)
+  {
+    print(GlobalVars.lectureID);
+    return true;
+  }
+    print("123");
+
+  return false;
+}
 
   TextEditingController cls = TextEditingController();
+
   TextEditingController section = TextEditingController();
+
   TextEditingController subject = TextEditingController();
+
   TextEditingController teacher = TextEditingController();
+
   double height=0;
+
   double width=0;
 
   @override
@@ -54,7 +86,7 @@ class Home extends StatelessWidget {
                   children: [
                   
                     Text("Section",style: TextStyle(color: Colors.blue[800],fontSize: 18,fontWeight: FontWeight.bold)),
-                    TextFormField(controller: cls,),
+                    TextFormField(controller: section,),
                 ],)),
                 SizedBox(height: 20,),
         
@@ -64,7 +96,7 @@ class Home extends StatelessWidget {
                   children: [
                   
                     Text("Subject",style: TextStyle(color: Colors.blue[800],fontSize: 18,fontWeight: FontWeight.bold)),
-                    TextFormField(controller: cls,),
+                    TextFormField(controller: subject,),
                 ],)),
                 SizedBox(height: 20,),
         
@@ -74,15 +106,21 @@ class Home extends StatelessWidget {
                   children: [
                   
                     Text("Teacher",style: TextStyle(color: Colors.blue[800],fontSize: 18,fontWeight: FontWeight.bold)),
-                    TextFormField(controller: cls,),
+                    TextFormField(controller: teacher,),
                 ],)),
                SizedBox(height: 20,),
               InkWell(
                 
-                onTap: () {
+                onTap: ()  async{
+                   check=await sendData();
+                  if(check!){
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return RecordingPage();
+                    return AdminSetting();
                   },));
+                  }
+                 setState(() {
+                   
+                 });
                 },
                 child: NativeButton(),
               )
@@ -93,6 +131,8 @@ class Home extends StatelessWidget {
       ),
     );
   }
+
+bool? check=null;
 
   Container NativeButton() {
     return Container(
