@@ -1,12 +1,13 @@
 import 'dart:async';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_project_screens/globalVars.dart';
 import 'package:flutter_project_screens/screens/khubaib/TrackRecordScreen.dart';
+import 'package:flutter_project_screens/screens/khubaib/activitylogScreen.dart';
 import 'package:flutter_project_screens/screens/zetro/confliction.dart';
+import 'package:flutter_project_screens/screens/zetro/fileDownload.dart';
 import 'package:http/http.dart' as http;
 class RecordingPage extends StatefulWidget {
   const RecordingPage({super.key});
@@ -49,24 +50,21 @@ if (cameraController == null || !cameraController.value.isInitialized) {
     try {
       
     Timer.periodic(Duration(seconds: 5), (timer) async {
-      print('inside timer.... ');
-
-      if (true) {
-        print('Uploading video.... ');
+      if (turnOFsnapping)
+      {   
+        
+        timer.cancel();
+       
+      }
+      
         final file = await cameraController.takePicture();
-        setState(() => _isRecording = false);
-
+        setState((){} );
         sendPic(file);
-       
-       
-        setState(() => _isRecording = true);
-      } 
-      //else {
-      //   _isRecording = true;
-      //   await cameraController.prepareForVideoRecording();
-      //   await cameraController.startVideoRecording();
-      //   setState(() => _isRecording = true);
-      // }
+        setState((){});
+
+
+        
+      
     });
       
     } on CameraException catch (e) {
@@ -77,7 +75,7 @@ if (cameraController == null || !cameraController.value.isInitialized) {
 
   }
 
-  bool _isRecording=false;
+
 
     Future<void> sendPic(XFile file)async{
           
@@ -116,6 +114,8 @@ if (cameraController == null || !cameraController.value.isInitialized) {
     super.initState();
   }
 
+  bool turnOFsnapping=false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,8 +135,9 @@ if (cameraController == null || !cameraController.value.isInitialized) {
         children: [
           InkWell(
             onTap: (() {
+              turnOFsnapping=true;
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return conflictionpage();
+                return filedownloadPage();
               },));
             }), child: NativeButton())
           ],)
