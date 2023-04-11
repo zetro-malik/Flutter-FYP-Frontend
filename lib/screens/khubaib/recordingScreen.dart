@@ -49,7 +49,7 @@ if (cameraController == null || !cameraController.value.isInitialized) {
 
     try {
       
-    Timer.periodic(Duration(seconds: 5), (timer) async {
+    Timer.periodic(Duration(seconds: GlobalVars.threshold), (timer) async {
       if (turnOFsnapping)
       {   
         

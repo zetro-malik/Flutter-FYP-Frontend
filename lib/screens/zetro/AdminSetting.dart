@@ -5,6 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_project_screens/globalVars.dart';
 import 'package:flutter_project_screens/screens/home.dart';
 import 'package:flutter_project_screens/screens/khubaib/recordingScreen.dart';
 
@@ -64,6 +65,7 @@ class _AdminSettingState extends State<AdminSetting> {
                       children: [
                         InkWell(
                           onTap: () {
+                            GlobalVars.threshold=int.parse(con.text);
                             Navigator.push(context, MaterialPageRoute(
                               builder: (context) {
                                 return RecordingPage();
