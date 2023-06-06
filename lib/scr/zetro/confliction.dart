@@ -48,7 +48,7 @@ class conflictionpage extends StatelessWidget {
           InkWell(
             onTap: (() {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return filedownloadPage();
+                return FileDownloadPage();
               },));
             }), child: NativeButton())
           ],)

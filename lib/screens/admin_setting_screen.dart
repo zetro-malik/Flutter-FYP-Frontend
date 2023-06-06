@@ -65,7 +65,7 @@ class _AdminSettingState extends State<AdminSetting> {
                       children: [
                         InkWell(
                           onTap: () {
-                            GlobalVars.threshold=int.parse(con.text);
+                             GlobalVars.threshold=int.parse(con.text);
                             Navigator.push(context, MaterialPageRoute(
                               builder: (context) {
                                 return RecordingPage();

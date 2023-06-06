@@ -86,6 +86,7 @@ class WelcomeScreen extends StatelessWidget {
                     SizedBox(
                       height: 60,
                     ),
+                    
                     Material(
                       color: GlobalVars.themecolor,
                       borderRadius: BorderRadius.circular(30),

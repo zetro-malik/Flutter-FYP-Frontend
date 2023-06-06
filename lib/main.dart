@@ -6,7 +6,9 @@ import 'package:flutter_project_screens/screens/khubaib/single_image_process.dar
 import 'package:flutter_project_screens/screens/uzair/examhall.dart';
 import 'package:flutter_project_screens/screens/onboarding_screen.dart';
 import 'package:flutter_project_screens/scr/home.dart';
+import 'package:flutter_project_screens/screens/zetro/board_images.dart';
 import 'package:flutter_project_screens/screens/zetro/fileDownload.dart';
+import 'package:flutter_project_screens/screens/zetro/view+pptx_screen.dart';
 
 
 Future<void> main() async {
@@ -22,12 +24,10 @@ class MyApp extends StatelessWidget {
       
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-      
-
         scaffoldBackgroundColor: Colors.white,
         primaryColor: Color(0xFF674AEF)
       ),
-      home: WelcomeScreen(),
+      home:WelcomeScreen(),
     );
   }
 }

@@ -92,11 +92,12 @@ class ModuleSelect extends StatelessWidget {
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Search Modules...",
+               
                         hintStyle: TextStyle(
                           color: Colors.black.withOpacity(0.5),
                         ),
                         prefixIcon: Icon(
-                          Icons.search,
+                          Icons.home,
                           size: 25,
                         )),
                   ),
@@ -128,7 +129,7 @@ class ModuleSelect extends StatelessWidget {
                       height: 10,
                     ),
                     GridView.builder(
-                        itemCount: imgList.length,
+                        itemCount: 4,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

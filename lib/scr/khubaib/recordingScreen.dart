@@ -137,7 +137,7 @@ if (cameraController == null || !cameraController.value.isInitialized) {
             onTap: (() {
               turnOFsnapping=true;
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return filedownloadPage();
+                return FileDownloadPage();
               },));
             }), child: NativeButton())
           ],)

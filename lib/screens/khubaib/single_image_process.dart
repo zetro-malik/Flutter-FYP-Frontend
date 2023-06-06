@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_project_screens/globalVars.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,14 +17,14 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
   bool isLoading = false;
 
   Future<void> _selectImages() async {
-    List<File> selectedFiles = [];
+    
     final List<XFile>? pickedFiles = await ImagePicker().pickMultiImage();
     if (pickedFiles != null) {
       for (XFile file in pickedFiles) {
-        selectedFiles.add(File(file.path));
+        _imageFiles.add(File(file.path));
       }
       setState(() {
-        _imageFiles = selectedFiles;
+        
       });
     }
   }
@@ -34,6 +33,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
     for (File imageFile in _imageFiles) {
       await _uploadImage(imageFile);
     }
+   await _fetchJsonData();
   }
 
   Future<void> _uploadImage(File imageFile) async {
@@ -41,28 +41,37 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
       isLoading = true;
     });
 
-    final url = '${GlobalVars.IP}:8009/getmodel?ID=50'; // Replace with your server URL
+    final url = '${GlobalVars.IP}:8009/getmodel?ID=${GlobalVars.lectureID}'; // Replace with your server URL
 
     var request = http.MultipartRequest('GET', Uri.parse(url));
     request.files.add(await http.MultipartFile.fromPath('img', imageFile.path));
 
     var response = await request.send();
 
-    if (response.statusCode == 200) {
-      final jsonData = await response.stream.bytesToString();
-      final decodedData = jsonDecode(jsonData);
-      if (decodedData is List) {
-        setState(() {
-          _jsonDataList = decodedData.cast<Map<String, dynamic>>();
-        });
-      }
-    } else {
+    if (response.statusCode != 200) {
       print('Image upload failed with status code ${response.statusCode}');
     }
 
     setState(() {
       isLoading = false;
     });
+  }
+
+  Future<void> _fetchJsonData() async {
+    final jsonUrl = '${GlobalVars.IP}:8009/getjsondata?ID=${GlobalVars.lectureID}'; // Replace with the URL for JSON data
+    var jsonResponse = await http.get(Uri.parse(jsonUrl));
+
+    if (jsonResponse.statusCode == 200) {
+      final jsonResult = json.decode(jsonResponse.body);
+      // Assuming the JSON data is a list of maps
+      if (jsonResult is List) {
+        setState(() {
+          _jsonDataList = jsonResult.cast<Map<String, dynamic>>();
+        });
+      }
+    } else {
+      print('Failed to get JSON data with status code ${jsonResponse.statusCode}');
+    }
   }
 
   @override
@@ -85,6 +94,15 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
               onPrimary: Colors.white,
             ),
           ),
+          ElevatedButton(
+            onPressed: () =>null,
+            child: Text('End Recording'),
+            style: ElevatedButton.styleFrom(
+              primary: Color(0xFF674AEF),
+              onPrimary: Colors.white,
+            ),
+          ),
+         
           Expanded(
             child: _buildDataList(),
           ),

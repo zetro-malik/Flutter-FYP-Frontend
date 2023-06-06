@@ -203,6 +203,9 @@ class _kRoomDataState extends State<kRoomData> {
           borderRadius: BorderRadius.circular(30),
           child: InkWell(
             onTap: () {
+
+                //api
+
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return PhotoUploadScreen();
               },));

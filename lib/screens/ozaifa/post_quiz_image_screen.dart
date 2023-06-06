@@ -24,11 +24,12 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
       return;
     }
     final isQuizValue = _isQuizEnabled ? '1' : '0';
-    final url = Uri.parse('${GlobalVars.IP}:8009/postInterval?id=50&isQuiz=${isQuizValue}&threshold=$_thresholdValue'); // Replace with your server upload URL
+    final url = Uri.parse('${GlobalVars.IP}:8009/postInterval?id=${GlobalVars.lectureID}&isQuiz=${isQuizValue}&threshold=$_thresholdValue'); // Replace with your server upload URL
     final request = http.MultipartRequest('POST', url);
 
     final imagePart = await http.MultipartFile.fromPath('img', _image!.path);
     request.files.add(imagePart);
+    
     setState(() {
       _isUploading = true;
     });
@@ -86,7 +87,7 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
   }
 
   Future<void> _performEndClassRequest() async {
-    final url = Uri.parse('${GlobalVars.IP}:8009/endClass?id=50&threshold=$_thresholdValue');
+    final url = Uri.parse('${GlobalVars.IP}:8009/endClass?id=${GlobalVars.lectureID}&threshold=$_thresholdValue');
     final request = http.MultipartRequest('POST', url);
 
     setState(() {
@@ -171,7 +172,7 @@ Future<void> _selectImage(ImageSource source) async {
                             style: TextStyle(fontSize: 16.0),
                           ),
                         )
-                      : Image.file(_image!, fit: BoxFit.cover),
+                      : Image.file(_image!, fit: BoxFit.contain),
                 ),
               ),
               SizedBox(height: 16.0),

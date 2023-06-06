@@ -68,9 +68,11 @@ class _GalleryVideoScreenState extends State<GalleryVideoScreen> {
       // Start extracting frames and audio
      
     });
+    
         await  _checkFramesExtracted();
+       // await _resetCache();
         _controller!.play();
-       _extractAudio();
+         _extractAudio();
   }
 
   Future<void> _checkFramesExtracted() async {
@@ -85,7 +87,7 @@ class _GalleryVideoScreenState extends State<GalleryVideoScreen> {
       });
       _startSendingFrames();
     } else {
-      _extractFrames();
+      await _extractFrames();
     }
   }
 
@@ -113,11 +115,12 @@ class _GalleryVideoScreenState extends State<GalleryVideoScreen> {
 
     await _flutterFFmpegFrames.executeWithArguments(commands).then((rc) {
       print('Frame extraction return code: $rc');
-      if (rc == 0) {
+      if (rc == 0)  {
         setState(() {
          
           _framesExtracted = true;
         });
+        
         _startSendingFrames();
       }
     });
@@ -169,7 +172,7 @@ class _GalleryVideoScreenState extends State<GalleryVideoScreen> {
   Future<http.Response> _sendFrame(File frameFile, int frameTimestamp) async {
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('${GlobalVars.IP}:8009/postImage?id=50'), // Replace with your server endpoint
+      Uri.parse('${GlobalVars.IP}:8009/postImage?id=${GlobalVars.lectureID}'), // Replace with your server endpoint
     );
     request.fields['timestamp'] = frameTimestamp.toString();
     request.files.add(await http.MultipartFile.fromPath('img', frameFile.path));
@@ -207,7 +210,7 @@ class _GalleryVideoScreenState extends State<GalleryVideoScreen> {
     try {
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse('${GlobalVars.IP}:8009/postAudio?id=50'), // Replace with your server endpoint
+        Uri.parse('${GlobalVars.IP}:8009/postAudio?id=${GlobalVars.lectureID}'), // Replace with your server endpoint
       );
 
       request.files.add(
@@ -276,7 +279,7 @@ class _GalleryVideoScreenState extends State<GalleryVideoScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) {
-                                return filedownloadPage();
+                                return FileDownloadPage();
                               }),
                             );
                           },
