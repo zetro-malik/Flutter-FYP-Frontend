@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+import 'package:flutter_project_screens/Screens/zetro/board_images.dart';
 import 'package:flutter_project_screens/screens/zetro/fileDownload.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -279,7 +280,7 @@ class _GalleryVideoScreenState extends State<GalleryVideoScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) {
-                                return FileDownloadPage();
+                                return SelectBoardImages();
                               }),
                             );
                           },

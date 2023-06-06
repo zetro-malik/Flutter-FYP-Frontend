@@ -225,7 +225,7 @@ Future<void> captureAndSendSnapshot() async {
               onPressed: _isRecording ?  () async {
                 await stopRecording();
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return  FileDownloadPage();
+                  return  SelectBoardImages();
                 },));
               } : startRecording,
               child: Text(
