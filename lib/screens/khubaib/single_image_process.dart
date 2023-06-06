@@ -3,6 +3,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_project_screens/globalVars.dart';
+import 'package:flutter_project_screens/screens/khubaib/showAverageScreen.dart';
+import 'package:flutter_project_screens/screens/khubaib/showDataScreen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,14 +19,54 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
   bool isLoading = false;
 
   Future<void> _selectImages() async {
-    
+    _imageFiles = [];
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Select Image Source"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                  _getImageFromCamera(); // Call the method to get image from camera
+                },
+                child: Text("Camera"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                  _getImageFromgallery(); // Call the method to get image from gallery
+                },
+                child: Text("Gallery"),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _getImageFromCamera() async {
+    final imageFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (imageFile != null) {
+      setState(() {
+        _imageFiles.add(File(imageFile.path));
+      });
+    }
+  }
+
+  Future<void> _getImageFromgallery() async {
+    List<File> selectedFiles = [];
     final List<XFile>? pickedFiles = await ImagePicker().pickMultiImage();
     if (pickedFiles != null) {
       for (XFile file in pickedFiles) {
-        _imageFiles.add(File(file.path));
+        selectedFiles.add(File(file.path));
       }
       setState(() {
-        
+        _imageFiles = selectedFiles;
       });
     }
   }
@@ -32,8 +74,8 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
   Future<void> _uploadImages() async {
     for (File imageFile in _imageFiles) {
       await _uploadImage(imageFile);
+      await _fetchJsonData();
     }
-   await _fetchJsonData();
   }
 
   Future<void> _uploadImage(File imageFile) async {
@@ -41,7 +83,8 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
       isLoading = true;
     });
 
-    final url = '${GlobalVars.IP}:8009/getmodel?ID=${GlobalVars.lectureID}'; // Replace with your server URL
+    final url =
+        '${GlobalVars.IP}:8009/getmodel?ID=${GlobalVars.lectureID}'; // Replace with your server URL
 
     var request = http.MultipartRequest('GET', Uri.parse(url));
     request.files.add(await http.MultipartFile.fromPath('img', imageFile.path));
@@ -58,7 +101,8 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
   }
 
   Future<void> _fetchJsonData() async {
-    final jsonUrl = '${GlobalVars.IP}:8009/getjsondata?ID=${GlobalVars.lectureID}'; // Replace with the URL for JSON data
+    final jsonUrl =
+        '${GlobalVars.IP}:8009/getActivitiesPerImage?ID=${GlobalVars.lectureID}'; // Replace with the URL for JSON data
     var jsonResponse = await http.get(Uri.parse(jsonUrl));
 
     if (jsonResponse.statusCode == 200) {
@@ -70,7 +114,8 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
         });
       }
     } else {
-      print('Failed to get JSON data with status code ${jsonResponse.statusCode}');
+      print(
+          'Failed to get JSON data with status code ${jsonResponse.statusCode}');
     }
   }
 
@@ -86,23 +131,41 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
           Expanded(
             child: _buildImagePreview(),
           ),
-          ElevatedButton(
-            onPressed: () => _uploadImages(),
-            child: isLoading ? CircularProgressIndicator() : Text('Upload Images'),
-            style: ElevatedButton.styleFrom(
-              primary: Color(0xFF674AEF),
-              onPrimary: Colors.white,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ElevatedButton(
+                onPressed: () => _uploadImages(),
+                child: isLoading
+                    ? CircularProgressIndicator()
+                    : Text('Upload Images'),
+                style: ElevatedButton.styleFrom(
+                  primary: Color.fromARGB(255, 61, 25, 219),
+                  onPrimary: Colors.white,
+                ),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              ElevatedButton(
+                onPressed: isLoading
+                    ? null
+                    : () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AverageScreenView()));
+                      },
+                child: Text('End lecture'),
+                style: ElevatedButton.styleFrom(
+                  primary: isLoading
+                      ? Color.fromARGB(255, 191, 188, 202).withOpacity(0.5)
+                      : Color.fromARGB(255, 61, 25, 219),
+                  onPrimary: Colors.white,
+                ),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () =>null,
-            child: Text('End Recording'),
-            style: ElevatedButton.styleFrom(
-              primary: Color(0xFF674AEF),
-              onPrimary: Colors.white,
-            ),
-          ),
-         
           Expanded(
             child: _buildDataList(),
           ),
@@ -126,8 +189,8 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
             padding: EdgeInsets.all(8.0),
             child: Image.file(
               _imageFiles[index],
-              width: 150,
-              height: 150,
+              width: 330,
+              height: 330,
             ),
           );
         },
@@ -153,6 +216,9 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                 Text(
                   name,
                   style: TextStyle(fontSize: 10),
+                ),
+                SizedBox(
+                  width: 5,
                 ),
                 Text(
                   data['studentName'],

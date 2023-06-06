@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_project_screens/screens/khubaib/showAverageScreen.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:io';
@@ -225,7 +225,11 @@ class _CameraVideoScreenState extends State<CameraVideoScreen> {
                 if (isRecording) {
                   condition = false;
                   isRecording = false;
-              
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return AverageScreenView();
+                    },
+                  ));
                 } else {
                   setState(() {
                     condition = true;
