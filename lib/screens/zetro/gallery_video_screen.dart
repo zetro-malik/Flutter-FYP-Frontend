@@ -280,7 +280,7 @@ class _GalleryVideoScreenState extends State<GalleryVideoScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) {
-                                return SelectBoardImages();
+                                return FileDownloadPage();
                               }),
                             );
                           },

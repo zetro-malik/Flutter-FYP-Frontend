@@ -20,7 +20,7 @@ class _SelectBoardImagesState extends State<SelectBoardImages> {
   }
 
   Future<void> fetchData() async {
-    final response = await http.get(Uri.parse('${GlobalVars.IP}:8009/getBoardJson?id=1094'));
+    final response = await http.get(Uri.parse('${GlobalVars.IP}:8009/getBoardJson?id=${GlobalVars.lectureID}'));
     if (response.statusCode == 200) {
       setState(() {
         jsonData = json.decode(response.body).cast<Map<String, dynamic>>();
@@ -50,7 +50,7 @@ class _SelectBoardImagesState extends State<SelectBoardImages> {
     // Send the jsonString to the server using http.post or any suitable method
     // Example:
     final response =  await http.post(
-  Uri.parse('${GlobalVars.IP}:8009/postBoardJson?id=1094'),
+  Uri.parse('${GlobalVars.IP}:8009/postBoardJson?id=${GlobalVars.lectureID}'),
   headers: {'Content-Type': 'application/json'},
   body: jsonString,
 );
