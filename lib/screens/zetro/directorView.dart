@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_project_screens/screens/khubaib/showDataScreen.dart';
+import 'package:flutter_project_screens/screens/zetro/ID_base_pptx_view_screen.dart';
 import 'package:http/http.dart' as http;
 import '../../globalVars.dart';
-import 'directorViewPerLecture.dart';
+
 
 class directorView extends StatefulWidget {
   const directorView({super.key});
@@ -51,7 +52,7 @@ class _directorViewState extends State<directorView> {
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(
                   builder: (context) {
-                    return directorViewPerLecture(
+                    return IDbasedPPTXviewer(
                       lectureID: lectureId,
                     );
                   },

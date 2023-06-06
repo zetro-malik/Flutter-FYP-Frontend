@@ -4,6 +4,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_project_screens/globalVars.dart';
 import 'package:flutter_project_screens/screens/khubaib/roomdata_screen.dart';
 import 'package:flutter_project_screens/screens/roomdata_screen.dart';
+import 'package:flutter_project_screens/screens/zetro/RecordingOrDirectorScreen.dart';
+import 'package:flutter_project_screens/screens/zetro/directorView.dart';
 
 
 
@@ -148,7 +150,7 @@ class ModuleSelect extends StatelessWidget {
       
                                      Navigator.push(context, MaterialPageRoute(
                                 builder: (context) {
-                                  return RoomData();
+                                  return RecordingOrDirectorScreen();
                                 },
                               ));
                                   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_project_screens/screens/khubaib/roomdata_screen.dart';
+import 'package:flutter_project_screens/screens/roomdata_screen.dart';
 
 import '../../globalVars.dart';
 import 'directorView.dart';
@@ -100,7 +101,7 @@ class RecordingOrDirectorScreen extends StatelessWidget {
                                   if (imgList[index] == "Record Lecture") {
                                     Navigator.push(context, MaterialPageRoute(
                                       builder: (context) {
-                                        return kRoomData();
+                                        return RoomData();
                                       },
                                     ));
                                   } else if (imgList[index] ==
@@ -115,6 +116,7 @@ class RecordingOrDirectorScreen extends StatelessWidget {
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
                                       vertical: 20, horizontal: 10),
+                                    
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
                                       color: Color(0xFFF5F3FF)),
@@ -138,9 +140,7 @@ class RecordingOrDirectorScreen extends StatelessWidget {
                                         color: Colors.black.withOpacity(0.6),
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
+                                    
                                   ]),
                                 ),
                               );
