@@ -1,23 +1,20 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_project_screens/screens/khubaib/showAverageScreen.dart';
-import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:flutter/services.dart';
 
 import '../../globalVars.dart';
 
 late List<CameraDescription> _cameras;
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  GlobalVars.cameras = await availableCameras();
+  _cameras = await availableCameras();
   runApp(MaterialApp(home: Home()));
 }
 
@@ -38,33 +35,64 @@ class Home extends StatelessWidget {
             ),
           );
         },
-        child: Text("goto"),
+        child: Text("Go to Camera"),
       ),
     );
   }
 }
 
-/// CameraVideoScreen is the Main Application.
 class CameraVideoScreen extends StatefulWidget {
   const CameraVideoScreen({Key? key}) : super(key: key);
 
   @override
-  State<CameraVideoScreen> createState() => _CameraVideoScreenState();
+  _CameraVideoScreenState createState() => _CameraVideoScreenState();
 }
 
 class _CameraVideoScreenState extends State<CameraVideoScreen> {
-  List<Map<String, dynamic>> _jsonDataList = [];
-  late CameraController controller;
+  late CameraController _controller;
   Uint8List? _imageData;
-  bool _isPause = false;
+  List<Map<String, dynamic>> _jsonDataList = [];
+  bool _isPaused = false;
+  bool _isRecording = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = CameraController(
+      GlobalVars.cameras[0],
+      ResolutionPreset.veryHigh,
+    );
+
+    _controller.initialize().then((_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {});
+    }).catchError((Object e) {
+      if (e is CameraException) {
+        switch (e.code) {
+          case 'CameraAccessDenied':
+            break;
+          default:
+            break;
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   Future<void> captureAndSendSnapshot() async {
-    if (!controller.value.isInitialized) {
+    if (!_controller.value.isInitialized) {
       return;
     }
 
     try {
-      final image = await controller.takePicture();
+      final image = await _controller.takePicture();
 
       setState(() {
         _imageData = File(image.path).readAsBytesSync();
@@ -86,40 +114,9 @@ class _CameraVideoScreenState extends State<CameraVideoScreen> {
     }
   }
 
-  late Timer _timer;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = CameraController(
-      GlobalVars.cameras[0],
-      ResolutionPreset.veryHigh,
-    );
-
-    controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        // _timer = Timer.periodic(Duration(seconds: 4), (_) async {
-        //   await captureAndSendSnapshot();
-        // });
-      });
-    }).catchError((Object e) {
-      if (e is CameraException) {
-        switch (e.code) {
-          case 'CameraAccessDenied':
-            break;
-          default:
-            break;
-        }
-      }
-    });
-  }
-
-  Future<void> _fetchJsonData() async {
+  Future<void> fetchJsonData() async {
     final jsonUrl =
-        '${GlobalVars.IP}:8009/getActivitiesPerImage?ID=${GlobalVars.lectureID}'; // Replace with the URL for JSON data
+        '${GlobalVars.IP}:8009/getActivitiesPerImage?ID=${GlobalVars.lectureID}';
     var jsonResponse = await http.get(Uri.parse(jsonUrl));
 
     if (jsonResponse.statusCode == 200) {
@@ -136,27 +133,19 @@ class _CameraVideoScreenState extends State<CameraVideoScreen> {
     }
   }
 
-  bool condition = true;
   Future<void> sendFrames() async {
-    while (condition ) {
-      if (_isPause)
-        {
-          Future.delayed(Duration(seconds: 1), () {});
-          continue;
-        }
-      await captureAndSendSnapshot();
-      await _fetchJsonData();
+    if (_isPaused) return;
+
+    await captureAndSendSnapshot();
+    
+    
+
+    await fetchJsonData();
+
+    if (_isRecording) {
+      // Continue sending frames if recording is still ongoing
+      Future.delayed(Duration(seconds: 1), sendFrames);
     }
-  }
-
-  bool isRecording = false;
-
-  @override
-  void dispose() {
-    condition = false;
-    _timer.cancel();
-    controller.dispose();
-    super.dispose();
   }
 
   Widget _buildDataList() {
@@ -174,13 +163,11 @@ class _CameraVideoScreenState extends State<CameraVideoScreen> {
                   name,
                   style: TextStyle(fontSize: 10),
                 ),
-                SizedBox(
-                  width: 5,
-                ),
+                SizedBox(width: 5),
                 Text(
                   data['studentName'],
                   style: TextStyle(fontSize: 10),
-                )
+                ),
               ],
             ),
             subtitle: Text(activity),
@@ -198,7 +185,7 @@ class _CameraVideoScreenState extends State<CameraVideoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (!controller.value.isInitialized) {
+    if (!_controller.value.isInitialized) {
       return Container();
     }
 
@@ -221,19 +208,22 @@ class _CameraVideoScreenState extends State<CameraVideoScreen> {
                   width: 2.0,
                 ),
               ),
-              child: CameraPreview(controller),
+              child: CameraPreview(_controller),
             ),
             Expanded(
               child: _buildDataList(),
             ),
-
-              ElevatedButton(
+            ElevatedButton(
               onPressed: () {
-                _isPause = !_isPause;
-               
+                setState(() {
+                  _isPaused = !_isPaused;
+                  if (_isPaused==false){
+                      sendFrames();
+                  }
+                });
               },
               child: Text(
-                _isPause ? "Resume" : "Pause",
+                _isPaused ? "Resume" : "Pause",
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -248,27 +238,17 @@ class _CameraVideoScreenState extends State<CameraVideoScreen> {
                 ),
               ),
             ),
-            
             ElevatedButton(
               onPressed: () {
-                if (isRecording) {
-                  condition = false;
-                  isRecording = false;
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return AverageScreenView();
-                    },
-                  ));
-                } else {
-                  setState(() {
-                    condition = true;
-                    isRecording = true;
-                    sendFrames();
-                  });
+                setState(() {
+                  _isRecording = !_isRecording;
+                });
+                if (_isRecording) {
+                  sendFrames();
                 }
               },
               child: Text(
-                isRecording ? "End Recording" : "Start Recording",
+                _isRecording ? "End Recording" : "Start Recording",
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -289,3 +269,16 @@ class _CameraVideoScreenState extends State<CameraVideoScreen> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
