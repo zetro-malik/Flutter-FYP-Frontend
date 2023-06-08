@@ -13,7 +13,7 @@ import 'package:flutter/services.dart';
 import '../../globalVars.dart';
 
 late List<CameraDescription> _cameras;
-//hellow
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -56,6 +56,7 @@ class _CameraVideoScreenState extends State<CameraVideoScreen> {
   List<Map<String, dynamic>> _jsonDataList = [];
   late CameraController controller;
   Uint8List? _imageData;
+  bool _isPause = false;
 
   Future<void> captureAndSendSnapshot() async {
     if (!controller.value.isInitialized) {
@@ -137,7 +138,12 @@ class _CameraVideoScreenState extends State<CameraVideoScreen> {
 
   bool condition = true;
   Future<void> sendFrames() async {
-    while (condition) {
+    while (condition ) {
+      if (_isPause)
+        {
+          Future.delayed(Duration(seconds: 1), () {});
+          continue;
+        }
       await captureAndSendSnapshot();
       await _fetchJsonData();
     }
@@ -220,6 +226,29 @@ class _CameraVideoScreenState extends State<CameraVideoScreen> {
             Expanded(
               child: _buildDataList(),
             ),
+
+              ElevatedButton(
+              onPressed: () {
+                _isPause = !_isPause;
+               
+              },
+              child: Text(
+                _isPause ? "Resume" : "Pause",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.white,
+                onPrimary: const Color(0xFF674AEF),
+                padding: EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 20,
+                ),
+              ),
+            ),
+            
             ElevatedButton(
               onPressed: () {
                 if (isRecording) {
