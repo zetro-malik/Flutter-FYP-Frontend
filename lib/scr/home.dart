@@ -1,152 +1,157 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_project_screens/globalVars.dart';
-import 'package:flutter_project_screens/scr/khubaib/recordingScreen.dart';
-import 'package:flutter_project_screens/screens/admin_setting_screen.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-class Home extends StatefulWidget {
 
+import '../../globalVars.dart';
 
+class nextscreen extends StatefulWidget {
   @override
-  State<Home> createState() => _HomeState();
+  _ImageUploadScreenState createState() => _ImageUploadScreenState();
 }
 
-class _HomeState extends State<Home> {
-Future<bool> sendData() async {
-  var respose=await http.post(
-    Uri.parse('http://192.168.91.52:8009/postRoomData?class=${cls.text}&section=${section.text}&subject=${subject.text}&teacher=${teacher.text}'),
-  );
-  
-   GlobalVars.lectureID =respose.body;
-  if(respose.statusCode==200)
-  {
-    print(GlobalVars.lectureID);
-    return true;
+class _ImageUploadScreenState extends State<nextscreen> {
+  bool _isUploading = false;
+  double _thresholdValue = 0.5; // Default threshold value
+  File? _image;
+  Uint8List? imageData;
+  String? imageUrl;
+  List<dynamic> data = [];
+
+  Future<void> _selectImage(ImageSource source) async {
+    setState(() {
+      imageData = null;
+    });
+    final pickedFile = await ImagePicker().getImage(source: source);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
   }
-    print("123");
 
-  return false;
-}
+  Future<void> getDepth() async {
+    if (_image == null) {
+      return;
+    }
+    final url = Uri.parse('${GlobalVars.IP}:8009/getDepthwithJson');
+    final request = http.MultipartRequest('GET', url);
 
-  TextEditingController cls = TextEditingController();
+    final imagePart = await http.MultipartFile.fromPath('img', _image!.path);
+    request.files.add(imagePart);
 
-  TextEditingController section = TextEditingController();
+    final response = await request.send();
 
-  TextEditingController subject = TextEditingController();
+    if (response.statusCode == 200) {
+      final responseBody = await response.stream.bytesToString();
+      final jsonData = json.decode(responseBody);
+      setState(() {
+        data = jsonData['data'];
+        imageUrl = jsonData['image_url'];
+      });
+      imageData = await response.stream.toBytes();
+      setState(() {});
+    }
+  }
 
-  TextEditingController teacher = TextEditingController();
-
-  double height=0;
-
-  double width=0;
+  void _showImageSourceDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Select Image Source'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                    _selectImage(ImageSource.gallery);
+                  },
+                  child: Text('Gallery'),
+                ),
+                SizedBox(height: 16),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                    _selectImage(ImageSource.camera);
+                  },
+                  child: Text('Camera'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    height = size.height;
-    width = size.width;
-
-    return Scaffold(
-      
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 40.0, right: 30,left: 30),
-            child: Center(
-              child: Column(children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal:25),
-                child: Column(children: [
-                Container(
-                  height: 120,
-                  child: Image.asset("assets/a.png")),
-                  SizedBox(height: 10,),
-                  Text("Classroom Assitant",style: TextStyle(color: Colors.grey,fontSize: 20,fontWeight: FontWeight.bold),),
-                
-                ]),),
-                
-                SizedBox(height: 20,),
-                Container(child:Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-        
-                  children: [
-                  
-                    Text("Class",style: TextStyle(color: Colors.blue[800],fontSize: 18,fontWeight: FontWeight.bold)),
-                    TextFormField(controller: cls,),
-                ],)),
-                SizedBox(height: 20,),
-                
-                 Container(child:Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-        
-                  children: [
-                  
-                    Text("Section",style: TextStyle(color: Colors.blue[800],fontSize: 18,fontWeight: FontWeight.bold)),
-                    TextFormField(controller: section,),
-                ],)),
-                SizedBox(height: 20,),
-        
-                 Container(child:Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-        
-                  children: [
-                  
-                    Text("Subject",style: TextStyle(color: Colors.blue[800],fontSize: 18,fontWeight: FontWeight.bold)),
-                    TextFormField(controller: subject,),
-                ],)),
-                SizedBox(height: 20,),
-        
-                 Container(child:Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-        
-                  children: [
-                  
-                    Text("Teacher",style: TextStyle(color: Colors.blue[800],fontSize: 18,fontWeight: FontWeight.bold)),
-                    TextFormField(controller: teacher,),
-                ],)),
-               SizedBox(height: 20,),
-              InkWell(
-                
-                onTap: ()  async{
-                   check=await sendData();
-                  if(check!){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return AdminSetting();
-                  },));
-                  }
-                 setState(() {
-                   
-                 });
-                },
-                child: NativeButton(),
-              )
-              ]),
-            ),
+    return Theme(
+      data: ThemeData(
+        scaffoldBackgroundColor: Colors.white,
+        primaryColor: Color(0xFF674AEF),
+      ),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text('Show Rows'),
+          centerTitle: true,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: _image == null
+                      ? Center(
+                          child: Text(
+                            'No image selected',
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                        )
+                      : imageUrl == null
+                          ? Image.file(_image!)
+                          : Image(
+                              image: NetworkImage('${GlobalVars.IP}\\${imageUrl}'),
+                            ),
+                ),
+              ),
+              SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: _showImageSourceDialog,
+                child: Text('Pick Image'),
+                style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).primaryColor,
+                  onPrimary: Colors.white,
+                ),
+              ),
+              SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: _isUploading ? null : getDepth,
+                child: _isUploading
+                    ? CircularProgressIndicator()
+                    : Text('Send Photo'),
+                style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).primaryColor,
+                  onPrimary: Colors.white,
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
-  }
-
-bool? check=null;
-
-  Container NativeButton() {
-    return Container(
-                width: 250,
-                padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                
-                border: Border.all(
-                 color: Colors.blue,
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(25))
-              ),
-              child: Center(child: Text("Next",style: TextStyle(color: Colors.white,fontSize: 22),))
-            );
   }
 }
