@@ -360,6 +360,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  image_crop:
+    dependency: "direct main"
+    description:
+      name: image_crop
+      sha256: a580010f9e90b20581ecf5e8f4e9aa838cb935ea1497f9d1b196baa382b84a6d
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.1"
+  image_painter:
+    dependency: "direct main"
+    description:
+      name: image_painter
+      sha256: d0f1637eb87b08a84e2fcf197dda8667365988314c20a9065115762ce43ae3d1
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
   image_picker:
     dependency: "direct main"
     description:
