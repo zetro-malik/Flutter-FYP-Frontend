@@ -25,6 +25,9 @@ The **Lecture Into Slide** module allows users to access the "director view," wh
   <img src="https://github.com/zetro-malik/FYP-Frontend-Flutter/blob/main/screenshots/lecture_into_slides/9.jpg" alt="Recording View" width="200"/>
   <img src="https://github.com/zetro-malik/FYP-Frontend-Flutter/blob/main/screenshots/lecture_into_slides/10.jpg" alt="Recording View" width="200"/>
   <img src="https://github.com/zetro-malik/FYP-Frontend-Flutter/blob/main/screenshots/lecture_into_slides/11.jpg" alt="Recording View" width="200"/>
+  <img src="https://github.com/zetro-malik/FYP-Frontend-Flutter/blob/main/screenshots/lecture_into_slides/12.jpg" alt="Recording View" width="200"/>
+
+  
   
 </div>
 
