@@ -1,11 +1,13 @@
 # Flutter Frontend for FYP
 
+
+
+This project serves as the frontend for our Final Year Project (FYP), consisting of three distinct modules: Lecture Into Slide, Activity Monitoring, and Attendance and Quiz System. While the majority of the project's focus was directed towards the backend development, the frontend, at present, exhibits some disorganization. Efforts are underway to restructure the frontend using the GetX package and following the MVVM architecture.
+
 <div>
   <img src="https://github.com/zetro-malik/FYP-Frontend-Flutter/blob/main/screenshots/lecture_into_slides/1.jpg" alt="Director View" width="200"/>
   <img src="https://github.com/zetro-malik/FYP-Frontend-Flutter/blob/main/screenshots/lecture_into_slides/2.jpg" alt="Add Room Data View" width="200"/>
 </div>
-
-This project serves as the frontend for our Final Year Project (FYP), consisting of three distinct modules: Lecture Into Slide, Activity Monitoring, and Attendance and Quiz System. While the majority of the project's focus was directed towards the backend development, the frontend, at present, exhibits some disorganization. Efforts are underway to restructure the frontend using the GetX package and following the MVVM architecture.
 
 ## Modules Overview
 
