@@ -13,7 +13,13 @@ This project serves as the frontend for our Final Year Project (FYP), consisting
 
 ### Lecture Into Slide
 
-The **Lecture Into Slide** module allows users to access the "director view," which displays all lecture data and permits filtering. In the "add room data view," the app collects room data, sends it to the server, and receives a lectureID for subsequent processing. The "Recording view" enables users to select either camera recording or video import from the gallery. Extracted frames are sent to the server. The "Review the processed lecture data" feature allows for a final review and crosscheck of the server-processed data, enabling manual corrections if required. If everything is in order, the "download lecture view" facilitates lecture download.
+The **Lecture Into Slide** module addresses the challenge of capturing clear board images by removing the teacher from in front of the board. It achieves this by recording the audio and creating a .pptx file of each board containing its audio clip.
+
+- **Director View**: Displays all lecture data and permits filtering.
+- **Add Room Data View**: Collects room data, sends it to the server, and receives a lectureID for subsequent processing.
+- **Recording View**: Users can select camera recording or video import from the gallery. Extracted frames are sent to the server.
+- **Review Processed Data**: Allows a final review and crosscheck of server-processed data, enabling manual corrections if required.
+- **Download Lecture View**: Facilitates the download of the processed lecture.
 
 <div>
   <img src="https://github.com/zetro-malik/FYP-Frontend-Flutter/blob/main/screenshots/lecture_into_slides/3.jpg" alt="Director View" width="200"/>
