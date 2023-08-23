@@ -2,15 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_project_screens/globalVars.dart';
-import 'package:flutter_project_screens/screens/khubaib/roomdata_screen.dart';
+import 'package:flutter_project_screens/screens/lecture_into_slides/RecordingOrDirectorScreen.dart';
 import 'package:flutter_project_screens/screens/roomdata_screen.dart';
-import 'package:flutter_project_screens/screens/zetro/RecordingOrDirectorScreen.dart';
-import 'package:flutter_project_screens/screens/zetro/directorView.dart';
 
-
-
-import 'ozaifa/post_quiz_image_screen.dart';
-import 'ozaifa/roomdata_screen.dart';
 
 class ModuleSelect extends StatelessWidget {
   List imgList = [
@@ -154,20 +148,7 @@ class ModuleSelect extends StatelessWidget {
                                 },
                               ));
                                   }
-                                  else if (imgList[index]=="Abnormal Behavior"){
-                                         Navigator.push(context, MaterialPageRoute(
-                                builder: (context) {
-                                  return kRoomData();
-                                },
-                              ));
-                                  }
-                                     else if (imgList[index]=="Attendance"){
-                                         Navigator.push(context, MaterialPageRoute(
-                                builder: (context) {
-                                  return ORoomData();
-                                },
-                              ));
-                                  }
+                                 
                              
                             },
                             child: Container(

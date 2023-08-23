@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:flutter_project_screens/Screens/zetro/directorView.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_project_screens/screens/lecture_into_slides/directorView.dart';
 
 import '../../globalVars.dart';
 import '../roomdata_screen.dart';
@@ -103,8 +100,8 @@ class RecordingOrDirectorScreen extends StatelessWidget {
                                         return RoomData();
                                       },
                                     ));
-                                  } else if (imgList[index] ==
-                                      "Director View") {
+                                  }
+                                  else  if (imgList[index] == "Director View") {
                                     Navigator.push(context, MaterialPageRoute(
                                       builder: (context) {
                                         return directorView();

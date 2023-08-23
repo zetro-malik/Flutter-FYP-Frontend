@@ -7,6 +7,6 @@ class GlobalVars {
   static String lectureID = "";
   static int threshold = 5;
   static Color themecolor = Color(0xFF674AEF);
-  static String IP = "http://192.168.100.9";
+  static String IP = "http://192.168.18.61";
   static  List<CameraDescription> cameras = [];
 }

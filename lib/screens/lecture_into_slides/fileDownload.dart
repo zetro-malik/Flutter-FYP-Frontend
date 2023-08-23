@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project_screens/globalVars.dart';
-import 'package:flutter_project_screens/screens/zetro/view+pptx_screen.dart';
+import 'package:flutter_project_screens/screens/lecture_into_slides/view+pptx_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';

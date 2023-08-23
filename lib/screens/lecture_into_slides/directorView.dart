@@ -5,14 +5,15 @@ import 'package:flutter_project_screens/globalVars.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-class DirectorView extends StatefulWidget {
-  const DirectorView({Key? key}) : super(key: key);
+
+class directorView extends StatefulWidget {
+  const directorView({Key? key}) : super(key: key);
 
   @override
-  State<DirectorView> createState() => _DirectorViewState();
+  State<directorView> createState() => _directorViewState();
 }
 
-class _DirectorViewState extends State<DirectorView> {
+class _directorViewState extends State<directorView> {
   List<Map<String, dynamic>> _jsonDataList = [];
   List<Map<String, dynamic>> _filteredDataList = [];
   String _searchText = '';
@@ -30,6 +31,7 @@ class _DirectorViewState extends State<DirectorView> {
       if (jsonResult is List) {
         setState(() {
           _jsonDataList = jsonResult.cast<Map<String, dynamic>>();
+          _jsonDataList = _jsonDataList.reversed.toList();
           _filterData();
         });
       }
@@ -43,7 +45,7 @@ class _DirectorViewState extends State<DirectorView> {
       if (_selectedFilter == 'All' && _selectedTeacher == 'All' && _selectedCourse == 'All') {
         return true;
       } else if (_selectedFilter != 'All' && _selectedTeacher != 'All' && _selectedCourse != 'All') {
-        return data['course'] == _selectedFilter &&
+        return data['class'] == _selectedFilter &&
             data['teacher'] == _selectedTeacher &&
             data['course'] == _selectedCourse;
       } else if (_selectedFilter != 'All' && _selectedTeacher != 'All') {
@@ -74,6 +76,7 @@ class _DirectorViewState extends State<DirectorView> {
             data['section'].toLowerCase().contains(_searchText) ||
             data['course'].toLowerCase().contains(_searchText) ||
             data['teacher'].toLowerCase().contains(_searchText);
+          
       }).toList();
     }
 
@@ -104,6 +107,8 @@ class _DirectorViewState extends State<DirectorView> {
           final lectureId = data['lectureID'];
           final classs = data['class'];
           final section = data['section'];
+           final time = data['date'].split('_')[1];
+          final formattedTime = DateFormat.jm().format(DateTime.parse('2000-01-01 $time'));
           return InkWell(
             onTap: () {
               // Add your onTap logic here
@@ -114,21 +119,37 @@ class _DirectorViewState extends State<DirectorView> {
               child: ListTile(
                 title: Text(
                   '$classs $section',
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 14,color:  Color(0xFF674AEF),fontWeight: FontWeight.w600),
                 ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 4),
-                    Text(
-                      'Course: ${data['course']}',
-                      style: TextStyle(fontSize: 12),
+                   Row(
+                    children: [
+                       Text(
+                      'Course: ',
+                      style: TextStyle(fontSize: 12,color: Colors.lightBlueAccent),
                     ),
+                      Text(
+                      '${data['course']}',
+                      style: TextStyle(fontSize: 12,color: Colors.grey[900]),
+                    ),
+                    ],
+                   ),
                     SizedBox(height: 2),
-                    Text(
-                      'Teacher: ${data['teacher']}',
-                      style: TextStyle(fontSize: 12),
+                    Row(
+                      children: [
+                        Text(
+                      'Teacher: ',
+                      style: TextStyle(fontSize: 12,color: Colors.redAccent),
                     ),
+                     Text(
+                      '${data['teacher']}',
+                      style: TextStyle(fontSize: 12,color: Colors.grey[900]),
+                    ),
+                      ],
+                    )
                   ],
                 ),
                 trailing: Column(
@@ -139,7 +160,7 @@ class _DirectorViewState extends State<DirectorView> {
                     ),
                     SizedBox(height: 10,),
                     Text(
-                      'Time: ${data['date'].split('_')[1]}',
+                      'Time: ${formattedTime}',
                       style: TextStyle(fontSize: 12),
                     ),
                   ],
@@ -175,125 +196,130 @@ class _DirectorViewState extends State<DirectorView> {
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                DropdownButton<String>(
-                  value: _selectedFilter,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedFilter = newValue!;
-                      _filterData();
-                    });
-                  },
-                  items: <String>[
-                    'All',
-                    'PF',
-                    'AI',
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    );
-                  }).toList(),
-                  dropdownColor: Color(0xFF674AEF),
-                  style: TextStyle(color: Colors.white),
-                ),
-                SizedBox(width: 16),
-                DropdownButton<String>(
-                  value: _selectedTeacher,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedTeacher = newValue!;
-                      _filterData();
-                    });
-                  },
-                  items: <String>[
-                    'All',
-                    'Dr. Hassan',
-                    'Teacher 2',
-                    'Teacher 3',
-                    // Add more teacher options as needed
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    );
-                  }).toList(),
-                  dropdownColor: Color(0xFF674AEF),
-                  style: TextStyle(color: Colors.white),
-                ),
-                SizedBox(width: 16),
-                DropdownButton<String>(
-                  value: _selectedCourse,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedCourse = newValue!;
-                      _filterData();
-                    });
-                  },
-                  items: <String>[
-                    'All',
-                    'Course 1',
-                    'Course 2',
-                    'Course 3',
-                    // Add more course options as needed
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    );
-                  }).toList(),
-                  dropdownColor: Color(0xFF674AEF),
-                  style: TextStyle(color: Colors.white),
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  child: TextFormField(
-                    onChanged: (value) {
-                      setState(() {
-                        _searchText = value.toLowerCase();
-                      });
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'Search',
-                      suffixIcon: Icon(Icons.search),
-                    ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _searchText = value.toLowerCase();
+                  });
+                },
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  prefixIcon: Icon(Icons.search),
+                  filled: true,
+                  fillColor: Color(0xFFEDEDED),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
                   ),
                 ),
-              ],
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () async {
-                final selectedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2022),
-                  lastDate: DateTime(2030),
-                );
-                if (selectedDate != null) {
-                  setState(() {
-                    _selectedDate = selectedDate;
-                  });
-                }
-              },
-              child: Text('Select Date'),
-              style: ElevatedButton.styleFrom(
-                primary: Color(0xFF674AEF),
-                textStyle: TextStyle(color: Colors.white),
               ),
             ),
+            SizedBox(height: 30),
+           Row(
+            
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+   DropdownButton<String>(
+    
+  value: _selectedFilter,
+  onChanged: (String? newValue) {
+    setState(() {
+      _selectedFilter = newValue!;
+      _filterData();
+    });
+  },
+  items: <String>[
+    'All',
+    'PF',
+    'AI',
+  ].map<DropdownMenuItem<String>>((String value) {
+    return DropdownMenuItem<String>(
+      
+      value: value,
+      child: Text(
+        value,
+        style: TextStyle(color: Colors.black),
+      ),
+
+    );
+  }).toList(),
+
+),
+    SizedBox(width: 16),
+    DropdownButton<String>(
+      value: _selectedTeacher,
+      onChanged: (String? newValue) {
+        setState(() {
+          _selectedTeacher = newValue!;
+          _filterData();
+        });
+      },
+      items: <String>[
+        'All',
+        'Dr. Hassan',
+        'Teacher 2',
+        'Teacher 3',
+        // Add more teacher options as needed
+      ].map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(
+            value,
+            style: TextStyle(color: Colors.black),
+          ),
+        );
+      }).toList(),
+
+    ),
+    SizedBox(width: 16),
+    DropdownButton<String>(
+      value: _selectedCourse,
+      onChanged: (String? newValue) {
+        setState(() {
+          _selectedCourse = newValue!;
+          _filterData();
+        });
+      },
+      items: <String>[
+        'All',
+        'Course 1',
+        'Course 2',
+        'Course 3',
+        // Add more course options as needed
+      ].map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(
+            value,
+            style: TextStyle(color: Colors.black),
+          ),
+        );
+      }).toList(),
+
+    ),
+    SizedBox(width: 16),
+    IconButton(
+      onPressed: () async {
+        final selectedDate = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(2022),
+          lastDate: DateTime(2030),
+        );
+        if (selectedDate != null) {
+          setState(() {
+            _selectedDate = selectedDate;
+          });
+        }
+      },
+      icon: Icon(Icons.calendar_month),
+      color: Color(0xFF674AEF),
+      iconSize: 35,
+    ),
+  ],
+),
             SizedBox(height: 16),
             Expanded(
               child: Container(
