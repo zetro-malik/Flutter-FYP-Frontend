@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project_screens/globalVars.dart';
-import 'package:flutter_project_screens/screens/zetro/view+pptx_screen.dart';
+import 'package:flutter_project_screens/screens/lecture_into_slides/view+pptx_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -110,62 +110,62 @@ Future<File?> _downloadFile(String url, String filename) async {
                     ),
                   ),
                   SizedBox(height:40 ,),
-                  SizedBox(height: 70),
-                  GestureDetector(
-                    onTap: () async {
-                     await makeFile();
+                  
+                  // GestureDetector(
+                  //   onTap: () async {
+                  //    await makeFile();
                      
-                    },
-                    child: Container(
-                      width: 150,
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: GlobalVars.themecolor,
-                        border: Border.all(color: Colors.green),
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      ),
-                      child: Center(
-                        child: _inProgress
-                            ? CircularProgressIndicator()
-                            : Text(
-                                'Make Slide',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                ),
-                              ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  jsonData.isNotEmpty
-                      ? Container(
-                          width: 300,
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                          ),
-                          child: Text(
-                            jsonData,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                            ),
-                          ),
-                        )
-                      : Container(
-                          width: 300,
+                  //   },
+                  //   child: Container(
+                  //     width: 150,
+                  //     padding: EdgeInsets.all(12),
+                  //     decoration: BoxDecoration(
+                  //       color: GlobalVars.themecolor,
+                  //       border: Border.all(color: Colors.green),
+                  //       borderRadius: BorderRadius.all(Radius.circular(5)),
+                  //     ),
+                  //     child: Center(
+                  //       child: _inProgress
+                  //           ? CircularProgressIndicator()
+                  //           : Text(
+                  //               'Make Slide',
+                  //               style: TextStyle(
+                  //                 color: Colors.white,
+                  //                 fontSize: 20,
+                  //               ),
+                  //             ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizedBox(height: 20),
+                  // jsonData.isNotEmpty
+                  //     ? Container(
+                  //         width: 300,
+                  //         padding: EdgeInsets.all(12),
+                  //         decoration: BoxDecoration(
+                  //           color: Colors.white,
+                  //           border: Border.all(color: Colors.grey),
+                  //           borderRadius: BorderRadius.all(Radius.circular(5)),
+                  //         ),
+                  //         child: Text(
+                  //           jsonData,
+                  //           style: TextStyle(
+                  //             color: Colors.black,
+                  //             fontSize: 16,
+                  //           ),
+                  //         ),
+                  //       )
+                  //     : Container(
+                  //         width: 300,
                           
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                          ),
-                          child: Text("MetaData not recieved")
-                        ),
+                  //         padding: EdgeInsets.all(12),
+                  //         decoration: BoxDecoration(
+                  //           color: Colors.white,
+                  //           border: Border.all(color: Colors.grey),
+                  //           borderRadius: BorderRadius.all(Radius.circular(5)),
+                  //         ),
+                  //         child: Text("MetaData not recieved")
+                  //       ),
                         SizedBox(height: 100),
                         GestureDetector(
                     onTap: ()  {

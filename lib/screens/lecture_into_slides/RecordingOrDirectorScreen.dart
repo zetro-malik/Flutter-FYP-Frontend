@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:flutter_project_screens/screens/khubaib/roomdata_screen.dart';
+import 'package:flutter_project_screens/screens/lecture_into_slides/directorView.dart';
 
 import '../../globalVars.dart';
-import 'directorView.dart';
+import '../roomdata_screen.dart';
+
 
 class RecordingOrDirectorScreen extends StatelessWidget {
   List imgList = [
@@ -66,7 +65,7 @@ class RecordingOrDirectorScreen extends StatelessWidget {
                 SizedBox(height: 20),
                 Padding(
                   padding: EdgeInsets.only(left: 3, bottom: 15),
-                  child: Text("Classroom Assistant",
+                  child: Text("Selecting Mode",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 25,
@@ -85,12 +84,10 @@ class RecordingOrDirectorScreen extends StatelessWidget {
                             physics: NeverScrollableScrollPhysics(),
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
+                              crossAxisCount: 1,
                               childAspectRatio:
-                                  (MediaQuery.of(context).size.height -
-                                          50 -
-                                          25) /
-                                      (4 * 240),
+                                  (MediaQuery.of(context).size.height) /
+                                      (2 * 350),
                               mainAxisSpacing: 10,
                               crossAxisSpacing: 10,
                             ),
@@ -100,11 +97,11 @@ class RecordingOrDirectorScreen extends StatelessWidget {
                                   if (imgList[index] == "Record Lecture") {
                                     Navigator.push(context, MaterialPageRoute(
                                       builder: (context) {
-                                        return kRoomData();
+                                        return RoomData();
                                       },
                                     ));
-                                  } else if (imgList[index] ==
-                                      "Director View") {
+                                  }
+                                  else  if (imgList[index] == "Director View") {
                                     Navigator.push(context, MaterialPageRoute(
                                       builder: (context) {
                                         return directorView();
@@ -123,8 +120,8 @@ class RecordingOrDirectorScreen extends StatelessWidget {
                                       padding: EdgeInsets.all(10),
                                       child: Image.asset(
                                         "assets/images/${imgList[index]}.png",
-                                        width: 100,
-                                        height: 100,
+                                        width: 130,
+                                        height: 130,
                                       ),
                                     ),
                                     SizedBox(
@@ -133,7 +130,7 @@ class RecordingOrDirectorScreen extends StatelessWidget {
                                     Text(
                                       imgList[index],
                                       style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 21,
                                         fontWeight: FontWeight.w600,
                                         color: Colors.black.withOpacity(0.6),
                                       ),

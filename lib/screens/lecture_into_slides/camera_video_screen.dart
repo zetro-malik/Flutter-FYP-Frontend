@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_project_screens/screens/zetro/board_images.dart';
-import 'package:flutter_project_screens/screens/zetro/fileDownload.dart';
+import 'package:flutter_project_screens/screens/lecture_into_slides/board_images.dart';
+import 'package:flutter_project_screens/screens/lecture_into_slides/fileDownload.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:io';
@@ -41,8 +41,7 @@ class Home extends StatelessWidget {
              return CameraVideoScreen();
           },));
         }, child: Text("goto")),
-      )
-    ;
+      );
   }
 }
 
